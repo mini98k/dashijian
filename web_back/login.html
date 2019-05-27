@@ -29,66 +29,67 @@
                 <input type="submit" class="input_sub" value="登 录">
             </form>
         </div>
-    </div> 
+    </div>
     <!-- 弹出框 -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="myModalLabel">弹出窗</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">弹出窗</h4>
                 </div>
                 <div class="modal-body">
-                 
+
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                  <button type="button" class="btn btn-primary">更改</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">更改</button>
                 </div>
-              </div>
             </div>
-          </div>
-   <script src="./js/jquery-1.12.4.min.js"></script>
-   <script src="./js/bootstrap/js/bootstrap.min.js"></script>
-   <script>
-       $(function(){
-           $('.input_sub').click(function(e){
-               //阻止默认跳转
-               e.preventDefault();
-               //获取邮箱和密码内容
-               var user_name =$('.input_txt').val().trim();
-               var password =$('.input_pass').val().trim();
-               //判断是否为空
-               if(user_name ==''||password==''){
-                //    alert('你是傻逼吗,写好啊');
-                $('#myModal').modal()
-                $('.modal-body').text('请输入账户和密码')
-                   return;
-               }
-               //如果不为空,调用接口
+        </div>
+    </div>
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('.input_sub').click(function (e) {
+                //阻止默认跳转
+                e.preventDefault();
+                //获取邮箱和密码内容
+                var user_name = $('.input_txt').val().trim();
+                var password = $('.input_pass').val().trim();
+                //判断是否为空
+                if (user_name == '' || password == '') {
+                    //    alert('你是傻逼吗,写好啊');
+                    $('#myModal').modal()
+                    $('.modal-body').text('请输入账户和密码')
+                    return;
+                }
+                //如果不为空,调用接口
 
-               $.ajax({
-                   url:'https://autumnfish.cn/big/admin/login',
-                   type:'post',
-                   data:{
-                       user_name:user_name,
-                       password:password
-                   },
-                   success:function(backData){
-                       //判断账户密码是否正确
-                       if(backData.code==400) {
-                        //    alert('输入有误')
-                         $('#myModal').modal();
-                         $('.modal-body').text('请输入正确账户和密码')
-                       }else if(backData.code==200) {
-                           window.location.href='./index.html'
-                       }
-                   }
-                   
-               })
-           })
-       })
-   </script>
+                $.ajax({
+                    url: 'https://autumnfish.cn/big/admin/login',
+                    type: 'post',
+                    data: {
+                        user_name: user_name,
+                        password: password
+                    },
+                    success: function (backData) {
+                        //判断账户密码是否正确
+                        if (backData.code == 400) {
+                            //    alert('输入有误')
+                            $('#myModal').modal();
+                            $('.modal-body').text('请输入正确账户和密码')
+                        } else if (backData.code == 200) {
+                            window.location.href = './index.html'
+                        }
+                    }
+
+                })
+            })
+        })
+    </script>
 </body>
 
 </html>
