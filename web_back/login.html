@@ -30,7 +30,42 @@
         </div>
 
     </div> 
+   <script src="./js/jquery-1.12.4.min.js"></script>
+   <script>
+       $(function(){
+           $('.input_sub').click(function(e){
+               //阻止默认跳转
+               e.preventDefault();
+               //获取邮箱和密码内容
+               var user_name =$('.input_txt').val().trim();
+               var password =$('.input_pass').val().trim();
+               //判断是否为空
+               if(user_name ==''||password==''){
+                   alert('你是傻逼吗,写好啊');
+                   return;
+               }
+               //如果不为空,调用接口
 
+               $.ajax({
+                   url:'https://autumnfish.cn/big/admin/login',
+                   type:'post',
+                   data:{
+                       user_name:user_name,
+                       password:password
+                   },
+                   success:function(backData){
+                       //判断账户密码是否正确
+                       if(backData.code==400) {
+                           alert('输入有误')
+                       }else if(backData.code==200) {
+                           window.location.href='./index.html'
+                       }
+                   }
+                   
+               })
+           })
+       })
+   </script>
 </body>
 
 </html>
