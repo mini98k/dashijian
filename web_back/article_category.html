@@ -135,40 +135,55 @@
             <td>{{v.s}}</td>
             <td class="text-center">
                 <a href='javascript:editTr({"id":"1","slug":"uncategorized","name":"未分类"});' class="btn btn-info btn-xs">编辑</a>
-                <a href="javascript:deleteTr( 1 );" class="btn btn-danger btn-xs">删除</a>
+                <a href="javascript:deleteTr( {{v.id}} );" class="btn btn-danger btn-xs">删除</a>
             </td>
         </tr>
     {{/each}}
 </script>
     <script>
         $(function () {
-           function getCate(){
-            $.ajax({
-                url: 'https://autumnfish.cn/big32/admin/category_search',
-                success: function (backData) {
-                    var html = template('temp', backData);
-                    $('tbody').html(html)
-                }
-            })
-           }
-           getCate()
-           $('#model_add').click(function () {
+            function getCate() {
                 $.ajax({
-                    url:'https://autumnfish.cn/big32/admin/category_add',
-                    type:'post',
-                    data:{
-                        name:$('.cate_name').val(),
-                        slug:$('.cate_slug').val()
-                    },
-                    success:function(backData){
-                        console.log(backData);
-                        if(backData.code ==200) {
-                            getCate()
-                        }
-                         $('#addModal').modal('hide');
+                    url: 'http://localhost:8000/admin/category_search',
+                    success: function (backData) {
+                        var html = template('temp', backData);
+                        $('tbody').html(html)
                     }
                 })
-               
+            }
+            getCate()
+            //删除数据
+            window.deleteTr =function(id){
+                $.ajax({
+                    url:'http://localhost:8000/admin/category_delete',
+                    type:'post',
+                    data:{
+                        id:id
+                    },
+                    success:function(backData){
+                        if(backData.code==200) {
+                            getCate()
+                        }
+                    }
+                })
+            }
+            $('#model_add').click(function () {
+                $.ajax({
+                    url: 'http://localhost:8000/admin/category_add',
+                    type: 'post',
+                    data: {
+                        name: $('.cate_name').val(),
+                        slug: $('.cate_slug').val()
+                    },
+                    success: function (backData) {
+                        console.log(backData);
+                        if (backData.code == 200) {
+                            getCate()
+                        }
+                        $('#addModal').modal('hide');
+                    }
+                })
+
             });
 
         })
