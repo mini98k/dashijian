@@ -188,17 +188,18 @@
             $('#model_add').click(function () {
                 if ($(this).hasClass('btn-success')) {
                     //修改
-                    var id = $('input[name=id]').val()
-                    var name = $('input[name=name]').val()
-                    var slug = $('input[name=slug]').val()
+                    // var id = $('input[name=id]').val()
+                    // var name = $('input[name=name]').val()
+                    // var slug = $('input[name=slug]').val()
                     $.ajax({
                         url: 'http://localhost:8000/admin/category_edit',
                         type: 'post',
-                        data: {
-                            id: id,
-                            name: name,
-                            slug: slug
-                        },
+                        // data: {
+                        //     id: id,
+                        //     name: name,
+                        //     slug: slug
+                        // },
+                        data:$('form').serialize(),
                         success: function (backData) {
                             if (backData.code == 200) {
                                 getCate()
