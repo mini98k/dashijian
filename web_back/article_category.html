@@ -72,7 +72,8 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addModal">新增分类</a>
+                            <a href="#" class="btn btn-success btn-add" data-toggle="modal"
+                                data-target="#addModal">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
@@ -89,13 +90,15 @@
                 </div>
                 <div class="modal-body">
                     <form>
+                        <!-- 写一个影藏域 -->
+                        <input type="hidden" name="id">
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">分类名称:</label>
-                            <input type="text" class="form-control cate_name">
+                            <input type="text" class="form-control cate_name" name="name">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">分类别名:</label>
-                            <input type="text" class="form-control cate_slug">
+                            <input type="text" class="form-control cate_slug" name="slug">
                         </div>
                     </form>
                 </div>
@@ -132,9 +135,9 @@
     {{each data v}}
     <tr>
             <td>{{v.name}}</td>
-            <td>{{v.s}}</td>
+            <td>{{v.slug}}</td>
             <td class="text-center">
-                <a href='javascript:editTr({"id":"1","slug":"uncategorized","name":"未分类"});' class="btn btn-info btn-xs">编辑</a>
+                <a href='javascript:editTr({"id":"{{v.id}}","slug":"{{v.slug}}","name":"{{v.name}}"});' class="btn btn-info btn-xs">编辑</a>
                 <a href="javascript:deleteTr( {{v.id}} );" class="btn btn-danger btn-xs">删除</a>
             </td>
         </tr>
@@ -153,37 +156,75 @@
             }
             getCate()
             //删除数据
-            window.deleteTr =function(id){
+            window.deleteTr = function (id) {
                 $.ajax({
-                    url:'http://localhost:8000/admin/category_delete',
-                    type:'post',
-                    data:{
-                        id:id
+                    url: 'http://localhost:8000/admin/category_delete',
+                    type: 'post',
+                    data: {
+                        id: id
                     },
-                    success:function(backData){
-                        if(backData.code==200) {
+                    success: function (backData) {
+                        if (backData.code == 200) {
                             getCate()
                         }
                     }
                 })
             }
-            $('#model_add').click(function () {
-                $.ajax({
-                    url: 'http://localhost:8000/admin/category_add',
-                    type: 'post',
-                    data: {
-                        name: $('.cate_name').val(),
-                        slug: $('.cate_slug').val()
-                    },
-                    success: function (backData) {
-                        console.log(backData);
-                        if (backData.code == 200) {
-                            getCate()
-                        }
-                        $('#addModal').modal('hide');
-                    }
-                })
+            //弹出修改框
+            window.editTr = function (data) {
+                for (const key in data) {
+                    $('input[name=' + key + ']').val(data[key])
+                }
+                $('.modal-title').text('敬请修改吧')
+                $('#model_add').text('保存').addClass('btn-success')
+            }
 
+            //弹出新增按钮改变样式
+            $('.btn-add').click(function () {
+                $('.modal-title').text('敬请新增吧')
+                $('#model_add').text('新增').removeClass('btn-success')
+                $('form input').val('')
+            })
+            $('#model_add').click(function () {
+                if ($(this).hasClass('btn-success')) {
+                    //修改
+                    var id = $('input[name=id]').val()
+                    var name = $('input[name=name]').val()
+                    var slug = $('input[name=slug]').val()
+                    $.ajax({
+                        url: 'http://localhost:8000/admin/category_edit',
+                        type: 'post',
+                        data: {
+                            id: id,
+                            name: name,
+                            slug: slug
+                        },
+                        success: function (backData) {
+                            if (backData.code == 200) {
+                                getCate()
+                            }
+                            $('#addModal').modal('hide');
+                        }
+                    })
+                } else {
+                    //新增
+                    $.ajax({
+                        url: 'http://localhost:8000/admin/category_add',
+                        type: 'post',
+                        data: {
+                            name: $('.cate_name').val(),
+                            slug: $('.cate_slug').val()
+                        },
+                        success: function (backData) {
+                            console.log(backData);
+                            if (backData.code == 200) {
+                                getCate()
+                            }
+                            $('#addModal').modal('hide');
+                        }
+                    })
+
+                }
             });
 
         })
