@@ -46,11 +46,7 @@
                     <label for="inputEmail3" class="col-sm-2 control-label">文章类别：</label>
                     <div class="col-sm-4">
                         <select class="form-control">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                          
                         </select>
                     </div>
                 </div>
@@ -85,11 +81,25 @@
             </form>
         </div>
     </div>
+    <script src="./js/template-web.js"></script>
+    <script id="temp" type="text/html">
+        {{ each data v}}
+        <option value='{{v.id}}'>{{v.name}}</option>
+        {{/each}}
+    </script>
     <script>
         $(function(){
             $('#exampleInputFile').change(function(){
                 var url =URL.createObjectURL(this.files[0]);
                 $(this).prev('img').attr('src',url)
+            })
+            $.ajax({
+                url:'http://localhost:8000/admin/category_search',
+                success:function(backData){
+                   var html = template('temp',backData)
+                   $('.form-control').html(html)
+                    
+                }
             })
         })
     </script>
