@@ -311,27 +311,12 @@
                     $('#selCategory').append(html)
                 }
             })
-            //获取分页数据
-            var myPage = 1
-            function getArticle() {
-                $.ajax({
-                    url: 'http://localhost:8000/admin/search',
-                    data: {
-                        page: myPage,
-                        perpage: 6,
-                        type:$('#selCategory').val(),
-                        state:$('#selStatus').val()
-                    },
-                    success: function (backData) {
-                        var html = template('cate', backData)
-                        $('tbody').html(html)
-                    }
-                })
-            }
-            getArticle()
-            //分页表格
-            $('.pagination').twbsPagination({
-                totalPages: 35,
+            //获取文章数据
+            var myPage = 1;
+            var myTotalPage = 10;
+            var $pagination = $('.pagination');
+            var defaultOpts = {
+                totalPages: myTotalPage,
                 visiblePages: 7,
                 first: '首页',
                 prev: '上一页',
@@ -342,12 +327,58 @@
                     myPage = page
                     getArticle()
                 }
-            });
-           //点击筛选功能
-           $('#btnSearch').click(function(e){
-               e.preventDefault();
-               getArticle()
-           })
+            };
+            $pagination.twbsPagination(defaultOpts);
+            function getArticle() {
+                $.ajax({
+                    url: 'http://localhost:8000/admin/search',
+                    data: {
+                        page: myPage,
+                        perpage: 6,
+                        type: $('#selCategory').val(),
+                        state: $('#selStatus').val()
+                    },
+                    success: function (backData) {
+                        // console.log(backData);
+
+                        var html = template('cate', backData)
+                        $('tbody').html(html)
+                        var totalPages = backData.totalPage;
+                        if (myTotalPage != totalPages) {
+                            myTotalPage = totalPages;
+                            // var currentPage = $pagination.twbsPagination('getCurrentPage');
+                            $pagination.twbsPagination('destroy');
+                            $pagination.twbsPagination($.extend({}, defaultOpts, {
+                                startPage:1,
+                                totalPages: totalPages
+                            }));
+                        }
+
+                    }
+                })
+            }
+            getArticle()
+            //根据分页插件示例修改分页插件的使用
+
+            //分页表格
+            //  $('.pagination').twbsPagination({
+            //         totalPages: 35,
+            //         visiblePages: 7,
+            //         first: '首页',
+            //         prev: '上一页',
+            //         next: '下一页',
+            //         last: '尾页',
+            //         onPageClick: function (event, page) {
+            //             console.log(page);
+            //             myPage = page
+            //             getArticle()
+            //         }
+            //     });
+            //点击筛选功能
+            $('#btnSearch').click(function (e) {
+                e.preventDefault();
+                getArticle()
+            })
         })
     </script>
 </body>

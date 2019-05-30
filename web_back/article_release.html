@@ -15,6 +15,11 @@
     <script src="js/jedate/js/jedate.js"></script>
     <script src="js/tinymce/js/tinymce/tinymce.min.js"></script>
     <script src="js/tinymce/js/tinymce_setup.js"></script>
+    <style>
+    #tupian{
+        height: 100px;
+    }
+    </style>
 </head>
 
 <body>
@@ -33,6 +38,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">文章封面：</label>
                     <div class="col-sm-10">
+                        <img src="" alt="" id="tupian">
                         <input type="file" id="exampleInputFile">
                     </div>
                 </div>
@@ -79,7 +85,14 @@
             </form>
         </div>
     </div>
-
+    <script>
+        $(function(){
+            $('#exampleInputFile').change(function(){
+                var url =URL.createObjectURL(this.files[0]);
+                $(this).prev('img').attr('src',url)
+            })
+        })
+    </script>
 </body>
 
 </html>
